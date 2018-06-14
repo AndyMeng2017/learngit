@@ -1,0 +1,524 @@
+du -sh *       显示当前文件夹中的全部文件大小
+du -sh ***     显示***文件的大小
+
+
+shift+g        在编辑或查看文本时，跳转到最下边
+
+
+mv *** ../     复制到上层文件夹
+cp -r /home/../data/jt_sap_cluster/nodes/0/indices/pa_annoy2017-07 .   复制pa_annoy2017-07到当前文件夹中
+rm -rf *       删除当前文件夹中的全部文件
+
+
+lsof -i:+端口号             查看端口号是否被启用
+netstat -nap | grep +pid    知道PID，取到端口号
+netstat -panut | grep nginx | grep ESTABLISHED | wc -l 查看进程数
+
+
+su - + 用户名    切换到这个用户名
+
+
+sed -n '/日期2017-07-14/,/日期2017-07-15/p' catalina.out > ~/catalina.out.20170714-15
+
+grep 是否为骚扰电话:true catalina.out.20170705-06 |wc -l               显示该条语句的个数
+grep 上报平安骚扰结果数量 catalina.out.20170705-06                     显示该条语句的个数
+grep -C 10 java.net.SocketTimeoutException catalina.out.20170705-06    显示java.net.SocketTimeoutException语句的具体报错
+tail -50 /usr/local/mysql/data/sql-slow.log |grep -3 '192.168.0.10' 
+
+$grep -5 'parttern' inputfile //打印匹配行的前后5行
+ 
+$grep -C 5 'parttern' inputfile //打印匹配行的前后5行
+ 
+$grep -A 5 'parttern' inputfile //打印匹配行的后5行
+ 
+$grep -B 5 'parttern' inputfile //打印匹配行的前5行
+
+#cat /etc/passwd |awk  -F ':'  '{print $1"\t"$7}'                    awk默认按照行读取文件，这里以:分割
+
+iptables --list                         查看防火墙列表
+
+
+
+dd 删除一行
+d$ 删除以当前字符开始的一行字符
+ndd 删除以当前行开始的n行
+
+：+行数      	跳到某行
+shift + g    	跳到最下边
+/ + 内容     	向下查找的内容
+：set number	显示行号
+：set hls       高亮显示
+
+/pattern     向后搜索字符串pattern
+?pattern     向前搜索字符串pattern
+n            下一个匹配(如果是/搜索，则是向下的下一个，?搜索则是向上的下一个)
+N            上一个匹配(同上)
+:e ++enc=utf-8  设置文件编码（ucs-bom,utf-8,utf-16,gbk,big5,gb18030,latin1）
+
+
+定时任务                                         crontab -e
+每12小时执行一次                                 0 */12 * * *
+
+
+
+端口连通性********************************************************************命令：
+ping 192.169.51.3
+wget(或是curl) 192.169.51.3 8080   
+telnet 192.169.51.3 22    
+例子：（22为telnet的默认端口）
+linux-rzpy:~ # telnet 192.169.51.3 22
+Trying 192.169.51.3...
+Connected to 192.169.51.3.
+Escape character is '^]'.
+SSH-2.0-OpenSSH_6.2
+
+
+iftop -F 192.169.51.0/24 -i bond0     查看流量
+
+
+
+
+如何检查 Linux 中的程序和监听的端口
+sudo lsof -i -P -n | grep LISTEN
+sudo netstat -tulpn | grep LISTEN
+sudo nmap -sTU -O IP地址
+netstat -anp | grep ssh
+
+
+
+TOMCAT*************************************************************************命令：
+ps -aux | grep tomcat              查看tomcat进程
+sudo netstat -naop | grep 14177    根据进程查看端口号
+sudo lsof -i:8088                  根据端口号查看进程
+
+
+
+
+FTP*************************************************************************命令：
+curl支持的协议比wget多。
+curl -O ftp://mhnftp:123456@10.0.1.227/20170821-1552.txt		下载文件
+curl -T 20170821-1552.txt ftp://mhnftp:123456@10.0.1.227/pingan		上传文件
+
+
+
+
+
+
+
+
+ES****************************************************************************命令：
+./elasticsearch -d -p pid     启动，在bin文件夹中，执行命令
+ps -ef|grep + elasticsearch   查看当前执行的elasticsearch
+kill -9 + pid                 杀死进程
+
+curl -i -XGET 'http://10.0.2.16:9200/_cluster/health?pretty'\;    查看es集群健康
+
+
+解压命令：
+tar -zxvf ***.tar.gz       解压后缀名为tar.gz的文件
+tar -zcvf ***.tar.gz  ##   将命名为##的文件压缩为***.tar.gz的文件 
+
+
+java***************************************************************************命令
+
+配置jdk
+Linux：
+vim  此文件/etc/profile
+   export JAVA_HOME='/usr/java/jdk1.7.0_40'
+   export JAVA_BIN='usr/java/jdk1.7.0_40/bin'
+   export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+   export PATH=$PATH:$JAVA_HOME/bin
+   export JAVA_HOME JAVA_BIN CLASSPATH PATH
+source /etc/profile  （让/etc/profile文件修改后立即生效）
+
+whereis java
+which java （java执行路径）
+echo $JAVA_HOME
+
+
+内存泄漏问题
+
+jvisualvm命令Enter键进入VisualVM                                    
+
+查看当前的线程数  					    pstree -p 9275 | wc -l  
+查看当前线程的状态                          		    cat /proc/9275/status                              
+
+查看垃圾回收情况(1000ms执行一次，一共执行30次)              jstat -gcutil 16853 1000 30 
+
+查看对内存使用情况，发现存在JVM堆内存不能释放的问题         jmap -heap pid
+
+先看看  jmap -histo:live <pid> |less 
+
+获得堆转储文件                                               jmap -dump:live,format=b,file=heap.bin <pid>
+
+
+
+路径：/home/hcicloud/mat/data
+./ParseHeapDump.sh data/heap.bin org.eclipse.mat.api:suspects org.eclipse.mat.api:overview org.eclipse.mat.api:top_components
+
+-XX:+HeapDumpOnOutOfMemoryError -XX:+PrintGC -XX:+PrintGCDetails -XX:+PrintHeapAtGC -XX:+PrintGCTimeStamps -Xloggc:/home/hcicloud/apache-tomcat-7.0.42_success/logs/gc.$$.log
+
+redis***************************************************************************命令
+ps -ef|grep redis                           查看redis的目录
+cd /proc                                    根据pid，查看redis的安装目录
+cd pid
+ll
+或者直接使用
+lsof -p pid                                 
+
+
+./redis-server redis.conf                   服务启动         
+./redis-client                              客户端访问      
+./redis-cli --raw			    客户端默认编码访问
+
+redis-cli keys "s*" | xargs redis-cli del   批量删除 s* 通配符key
+ 
+
+
+orcle*****************************************************************************命令
+su - orcle                                  切换到orcle用户
+sqlplus 数据库用户名/密码                   就可以进入orcle数据库
+
+truncate table 表名			    清空表
+set line 200;				    设置显示200行，可以显示完整的表空间数据
+
+
+ 
+
+
+
+h2*****************************************************************************命令
+nohup sh h2.sh & tail -f nohup.out          启动h2服务，在当前文件夹中生成nohup.out日志文件
+
+nohup java -jar shareniu.jar >temp.txt &    jar包后台运行
+
+
+
+
+常用命令**********************************************************************************
+
+ifconfig 或者 ip a                          查看本机IP 
+telnet                                      获取本机公网IP地址
+history | more                              逐屏列出所有的历史记录
+
+free -m                                     查看当前的内存使用情况
+
+
+
+查看文件的命令=========================================================================
+
+vim + 文件名后，使用    /+要查找的关键字    快速找到关键字的位置
+ls |wc -l				    查看当前文件夹的文件个数
+ls -lR|grep ".wav"|wc -l		    查看当前文件夹以及子目录中".wav"命名的文件个数
+
+stat www				    牛逼，可以查看文件，目录的atime，ctime，mtime
+ll --time=atime www			    查看执行时间
+ll --time=ctime www			    查看修改状态时间，强调权限等
+ll  www					    查看修改文本时间
+
+du -sh * | sort -n			    统计当前文件夹(目录)大小，并按文件大小排序
+chown mail:mail log2012.log                 改变log2012.log的拥有者为 mail和群组为 mail【-R 关联所有】
+
+du -sh 					    查看当前文件夹大小
+
+
+du -sh * | sort -n 			    统计当前文件夹(目录)大小，并按文件大小排序
+
+du -sk filename 			    查看指定文件大小
+
+df -k                                       查看磁盘空间
+df -h 					    查看磁盘空间大小 GB
+lsblk					    查看磁盘分支
+
+find -name .bashrc                          查找.bashrc文件在什么地方
+find -name f.new |xargs ls -lta   | grep "Dec 13" > e.out   时间正序排序
+find -name f.new |xargs ls -ltr   | grep "Dec 13" 	    时间倒序排序
+find ./ -name *.wav                                         查找当前文件夹下的.wav文件的个数
+find . -type f -name "*.txt" | xargs grep "2913362"
+
+find -type d -ctime +10 -name '2016*' -exec tar -czf {}.tar.gz {} \;  找到10天前创建的目录然后按其名字打包
+find -maxdepth 1 -type d -ctime +3 -exec rm -rf {} \;		在当前目录[一层目录]下找到3天前的目录，进行删除
+
+cat dianhuaxinxi.txt | awk -F '|' '{print $5}'
+
+
+
+java -DVTS_HOME = '${VTS_HOME}'             这里是将''中的值赋值给VTS_HOME，这样子java代码中就可以取到VTS_HOME了
+
+
+
+u 代表用户. g 代表用户组. o 代表其他. a 代表所有.
+chmod u+x somefile			    这意味着授予这个文件的所属者执行的权限 
+chmod +x somefile 等价于 chmod a+x somefile 这意味着授予这个文件给所有所属者执行的权限 
+chmod 755 文件夹 -R                         修改该文件夹下的全部文件的权限
+
+
+Ctrl+Backspace                              实现删除字符串
+
+
+find -name "*.txt" |xargs rm -r             删除太多的文件
+
+sed  -i "s/10.0.1.108/10.111.8.179/g"   *   在cloud/conf里面直接用这个把IP全换了，修改10.0.1.108为10.111.8.179
+
+date -d @1361542596 +"%Y-%m-%d %H:%M:%S"    转化unix时间戳，指定日期格式
+
+
+scp -r file 192.169.51.3:/home/mhn          发送file到192.169.51.3机器的home下mhn文件夹
+
+
+
+shopt -s extglob			    比如要删除除了test.tar.gz文件以外的所有目录及文件
+rm -fr !(test.tar.gz)
+shopt -u extglob
+
+
+
+lsb_release -a                              查看linux系统版本命令
+
+
+
+冷门语句**********************************************************************
+
+ctrl+r                               进入history命令搜索模式，ctrl+r从下往上搜索
+shred -u -z +文件名                  更加安全的删除文件方式
+shopt -s cdspell                     启用模糊匹配路径
+(cd /etc && ls -a)                   直接在当前目录执行命令，而不会去跳转
+
+
+
+系统语句**********************************************************************
+
+
+# 总核数 = 物理CPU个数 X 每颗物理CPU的核数 
+# 总逻辑CPU数 = 物理CPU个数 X 每颗物理CPU的核数 X 超线程数
+
+# 查看物理CPU个数
+cat /proc/cpuinfo| grep "physical id"| sort| uniq| wc -l
+
+# 查看每个物理CPU中core的个数(即核数)
+cat /proc/cpuinfo| grep "cpu cores"| uniq
+
+# 查看逻辑CPU的个数
+cat /proc/cpuinfo| grep "processor"| wc -l
+复制代码
+ 查看CPU信息（型号）
+cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
+
+ 
+
+查看内 存信息
+# cat /proc/meminfo
+
+
+
+
+
+
+
+
+
+捷通华声的高级命令***********************************************************************************
+
+ps aux|grep servicef                        查看本地的能力服务
+
+
+1.ASR
+将pcm音频装写为文本（使用的是demo）
+ ./jASR_Demo.exe -i 192.168.50.122:12000 -v -t -d -f -b continue -k 16000 -a /home/hcicloud/cloud/data/pcm/ffe430de737811e7.pcm > /home/hcicloud/cloud/data/pcm/ffe430de737811e7.txt
+这个demo的路径是上海专网的192.168.50.112， cd ~/cloud/examples/c/bin/jASR_Demo.exe   ，同时需要切换拥有者为hcicloud
+将转义后的文本发到跳板机上   scp -r pcm/ 192.168.50.124:/tmp
+
+2.MRCP配置项
+kill -9 26638 && ./servicefx_mrcp_svc -d
+vim hcicloud_mrcp_svc.conf 
+vim unimrcprecog.xml 
+参考文档为：D:\用户目录\Documents\sinovoice.com.cn\平安直通车V2.0.0\运维\mrcp配置项.docx
+
+关闭与启动步骤
+要用hcicloud用户执行。  
+ps -ef | grep mrcp， 能看到一个servicefx_mrcp.....   -d   的一个进程。
+用kill  -9  pid号 杀掉进程。 在/home/hcicloud/cloud/bin 下面执行   ./servicefx_mrcp....  -d    就启动了
+
+
+
+
+
+
+
+vim hcicloud_asr_cp.conf
+
+
+问题1：
+cp的模型没配置，cloud/res/asr里的conf,data文件夹，需要指向模型
+
+问题2：
+trans升级的话，就可以转GSM610的录音了，这时意味着hcicloud_asr_trans.conf配置文件和之前的不一样
+
+
+
+
+=======================================================
+================  调试语句记录 ========================
+10.0.1.227
+/home/mhn
+java -jar -Xms1024m -Xmx4096m -Xss512K -XX:PermSize=512m -XX:MaxPermSize=1024m netty-socketio-first-1.0-227.jar
+
+/usr/local/node/0.10.24/lib/node_modules/websocket-bench
+websocket-bench -a 300 -c 1 -w 8 -k  http://127.0.1.227:7903?ctiCode=106 -o opt.log -v
+
+查看在线数
+netstat -panut | grep nginx | grep ESTABLISHED | wc -l
+
+lscpu  查看核数
+
+
+
+
+
+
+
+=======================================================
+================  git语句记录 ========================
+
+git init                                初始化git目录（文件夹会会多出一个.git文件）
+
+git add readme.txt
+git status
+git commit -m "add readme.txt"
+git diff HEAD -- readme.txt             [查看工作区和版本区的不同]
+
+查看提交记录
+git log												【详细版】
+git log --pretty=oneline							【简洁版】
+git log --graph --pretty=oneline --abbrev-commit	【分支合并图】
+git reflog
+
+版本回退：
+场景一：在工作区，git checkout -- readme.txt
+场景二：在缓存区，git reset HEAD readme.txt
+场景三：在版本库，git reset --hard HEAD^
+上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100
+场景三[补充]：git reset --hard 1094a
+
+删除文件
+git rm readme.txt
+git commit -m "del readme.txt"
+
+关联本地库和远程库（先去github新建一个仓库，命名为learngit）
+git remote add origin https://github.com/AndyMeng2017/learngit.git
+git push -u origin master					[-u 参数:第一次推送，本地master和远程库master关联]
+git push origin master
+
+从远程库中下载
+git clone git@github.com:AndyMeng2017/gitskills.git
+
+
+
+
+分支学习
+git branch                  查看分支
+git branch dev              创建分支
+git checkout master         切换分支
+git checkout -b dev         创建，切换分支
+git merge dev               合并[dev分支]到[当前分支]
+git branch -d dev           删除分支
+
+git branch -D feature-vulcan 分支内容没有合并，强制删除
+
+git merge --no-ff -m "merge with no-ff" dev   禁用Fast forward合并[dev分支]到[当前分支],同时会显示dev的分支记录信息
+
+
+
+暂存工作区的缓存区
+git stash                     [开启暂存]
+git stash list                [显示暂存列表]
+git stash pop                 [恢复的同时把stash内容也删了]
+git stash apply stash@{0}     [恢复某一个暂存内容]
+
+
+多人协作
+git remote -v
+git checkout -b dev origin/dev                    [建立一个远程dev分支]
+git push origin dev                               [往远程dev分支推送信息]
+远程冲突解决
+git branch --set-upstream-to=origin/dev dev       [若本地与远程没有关联，就去关联]
+git pull                                          [拉取远程分支内容]
+……正常解决冲突文件，然后提交
+
+
+打标签
+git tag                                            [查看所有的标签名]
+git tag -a v0.1 -m "version 0.1 released" 2b067    
+git show v0.1                                      
+git tag -d v0.1                                    [删除标签]
+git push origin v1.0                               [推送标签]
+git push origin --tags                             [推送本地全部标签]
+git push origin :refs/tags/v0.1                    [删除远程标签]
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
